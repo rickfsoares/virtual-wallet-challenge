@@ -17,7 +17,7 @@ Certifique-se de ter o **Docker** instalado em sua máquina.
 
 1.  **Clone o repositório:**
     ```bash
-    git clone <seu-link-do-github>
+    git clone <link-do-github>
     cd wallet_challenge
     ```
 
