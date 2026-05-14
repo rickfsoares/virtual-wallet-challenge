@@ -1,0 +1,62 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @user %>
+
+<div>
+  <%= link_to "Edit this user", edit_user_path(@user) %> |
+  <%= link_to "Back to users", users_path %>
+
+  <%= button_to "Destroy this user", @user, method: :delete %>
+</div>
+
+<hr>
+<h2>Carteira Virtual</h2>
+<p><strong>Saldo Atual:</strong> <%= number_to_currency(@user.current_balance) %></p>
+
+<h3>Histórico de Entradas</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Data/Hora</th>
+      <th>Tipo</th>
+      <th>Descrição</th>
+      <th>Valor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @wallet_entries.each do |entry| %>
+      <tr>
+        <td><%= entry.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+        <td><%= entry.entry_type.capitalize %></td>
+        <td><%= entry.description %></td>
+        <td style="color: <%= entry.credit? ? 'green' : 'red' %>">
+          <%= entry.credit? ? "+" : "-" %> <%= number_to_currency(entry.amount) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<hr>
+<h3>Nova Transação</h3>
+
+<%= form_with(model: [ @user, WalletEntry.new ], local: true) do |f| %>
+  <div>
+    <%= f.label :entry_type, "Tipo de Operação" %><br>
+    <%= f.select :entry_type, WalletEntry.entry_types.keys.map { |type| [type.capitalize, type] } %>
+  </div>
+
+  <div style="margin-top: 10px;">
+    <%= f.label :amount, "Valor" %><br>
+    <%= f.number_field :amount, step: 0.01, min: 0.01, value: 0.00 %>
+  </div>
+
+  <div style="margin-top: 10px;">
+    <%= f.label :description, "Descrição" %><br>
+    <%= f.text_field :description, placeholder: "Ex: Depósito inicial", required: true %>
+  </div>
+
+  <div style="margin-top: 15px;">
+    <%= f.submit "Processar Transação", style: "cursor: pointer; padding: 5px 10px;" %>
+  </div>
+<% end %>

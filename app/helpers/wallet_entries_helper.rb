@@ -1,0 +1,2 @@
+module WalletEntriesHelper
+end
